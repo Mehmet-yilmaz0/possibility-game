@@ -22,7 +22,6 @@ public class Set_Mode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         //aktif olan eventi cekiyorum   
         foreach (var active in Events)
         {
@@ -50,6 +49,10 @@ public class Set_Mode : MonoBehaviour
         {
             values += ClickedNumber;
         }
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            Erase(1);
+        } 
         if((Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.N  )) && !numbers.Any())
         {
             Vector3 dstc;
@@ -153,5 +156,22 @@ public class Set_Mode : MonoBehaviour
     void ScrollCam()
     {
         Camera.main.transform.position += new Vector3(Number_Background_radius, 0f, 0f);
+    }
+
+    public void Erase(int i = 1)
+    {
+        if (i >= 1)
+        {
+            if (numbers.Any())
+            {
+                for (int y = i; y >= 0; y--)
+                {
+                    Debug.Log("asd");
+                    Camera.main.transform.position -= new Vector3(0.16f, 0, 0);
+                    Destroy(numbers.Last());
+                    numbers.RemoveAt(numbers.Count - 1);
+                }
+            }
+        }
     }
 }
