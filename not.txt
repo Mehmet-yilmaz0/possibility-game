@@ -1,1 +1,3 @@
-set mode oluşturuluyor sayı girme kodu tamamen hazır sayıyı yazdıktan sonra sağ tarafına ek bir şey daha ekliyor ve bu eklediği iki nesneyi numbers isimli listeye atıyor. virgül kısmını iki ayrı kategoride inceledim ve virgülün sağına yazılan ondalık kısmı herhangi bir şekilde daha yazmadım. negatif sayı durumunu hesaba katmadığım için onu da hesaba katıp onu bir if else yapısı olarak eklemem gerekli.
+bölümlerin sırasıyla ilerlenmesi için olan kapı mekaniğini yaz (collider koy bi de kapı scripti aç kapı scripti içerisine atılan eventin isfinished değişkenini kontrol ederek çalışsın ve kendisine atılan event bitmişse kapı yok olsun.
+
+get mode aktifken kamera hareket etmiyor bu sorunu düzelt.

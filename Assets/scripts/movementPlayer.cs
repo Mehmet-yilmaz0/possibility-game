@@ -29,6 +29,10 @@ public class movementPlayer : MonoBehaviour
     {
         if (canmove)
         { MoveDirection(); }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
     private void FixedUpdate()
     {
@@ -37,9 +41,9 @@ public class movementPlayer : MonoBehaviour
             Move();
         }
     }
-        void Move()
-        {
-        if(direction != Vector2.zero)
+    void Move()
+    {
+        if (direction != Vector2.zero)
         {
             //anim.SetBool("IsMove", true);
         }
@@ -49,7 +53,7 @@ public class movementPlayer : MonoBehaviour
         }
         rb2d.velocity = direction * speed;
         direction = Vector2.zero;
-        }
+    }
 
     private void MoveDirection()
     {

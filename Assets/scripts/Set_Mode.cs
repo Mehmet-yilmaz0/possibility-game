@@ -2,14 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.ContentSizeFitter;
 
 public class Set_Mode : MonoBehaviour
 {
     protected float Number_Background_radius = 0.16f;
     protected float Number_start_radius = 0.16f;
     public GameObject character;
+    public GameObject ErrorBox;
     public NumberCreat NumberCreater;
     public List<GameObject> numbers;
     public string values;
@@ -18,7 +21,7 @@ public class Set_Mode : MonoBehaviour
     public KeyCode KeyCode;
     public bool CommaIsRight = true;
     public int HowMuch;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -33,17 +36,26 @@ public class Set_Mode : MonoBehaviour
         }
         NumberCreater.Create(new Vector3(Act_Event.transform.position.x, Act_Event.transform.position.y), NumberState.start);
     }
+    private void OnEnable()
+    {
+        foreach (var active in Events)
+        {
+            if (active.activeSelf)
+            {
+                Act_Event = active;
+                break;
+            }
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
         InputNum();
-
     }
 
     private void InputNum()
     {
-
         int ClickedNumber = GetNumberInput();
         if (ClickedNumber != -1)
         {
@@ -58,7 +70,7 @@ public class Set_Mode : MonoBehaviour
             Vector3 dstc;
             values += "-";
             dstc = new Vector3(Act_Event.transform.position.x + Number_start_radius, Act_Event.transform.position.y);
-            numbers.Add(NumberCreater.Create(dstc, "negative"));
+            numbers.Add(NumberCreater.Create(dstc, "-"));
             ScrollCam();
         }
         if (Input.GetKeyDown(KeyCode.V) && CommaIsRight)
@@ -71,14 +83,14 @@ public class Set_Mode : MonoBehaviour
                 dstc = new Vector3(Act_Event.transform.position.x + Number_start_radius, Act_Event.transform.position.y);
                 numbers.Add(NumberCreater.Create(dstc, 0));
                 ScrollCam();
-                numbers.Add(NumberCreater.Create(dstc = new Vector3(dstc.x + Number_Background_radius, dstc.y, dstc.z), "comma"));
+                numbers.Add(NumberCreater.Create(dstc = new Vector3(dstc.x + Number_Background_radius, dstc.y, dstc.z), "."));
                 ScrollCam();
 
             }
             else
             {
                 dstc = new Vector3(numbers.Last().GetComponent<Transform>().position.x + Number_Background_radius, Act_Event.transform.position.y);
-                numbers.Add(NumberCreater.Create(dstc, "comma"));
+                numbers.Add(NumberCreater.Create(dstc, "."));
                 ScrollCam();
                 numbers.Add(NumberCreater.Create(dstc = new Vector3(dstc.x + Number_Background_radius, dstc.y, dstc.z), NumberState.left));
                 ScrollCam();
@@ -107,13 +119,13 @@ public class Set_Mode : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || (Input.GetKeyDown(KeyCode.F) && Act_Event.GetComponent<Event>().IsInfinity))
         {
             if (numbers.Any())
             {
-                Act_Event.GetComponent<Event>().InputValues.Add(float.Parse(values));
+                Act_Event.GetComponent<Event>().InputValues.Add(double.Parse(values));
                 values = "";
-                HowMuch++;
+                HowMuch+=1;
                 ResetInput();
             }
         }
@@ -130,34 +142,52 @@ public class Set_Mode : MonoBehaviour
         }
         return -1; // Geçerli bir sayý girilmezse
     }
-
-    private void ResetInput()
+    
+    private void ResetInput()//space tusuna basildiginda veya f tusuna basildiginda cagrýlýr. ekrandaki tuslari silmeye yarar
     {
         CommaIsRight = true;
         Camera.main.transform.position = Act_Event.transform.position;
         Camera.main.transform.position += new Vector3(0, 0, -35);
-        if (Act_Event.GetComponent<Event>().InputValueAmount <= HowMuch)
+        if (Act_Event.GetComponent<Event>().InputValueAmount <= HowMuch && !Act_Event.GetComponent<Event>().IsInfinity)
         {
-            NumberCreater.Create(new Vector2(numbers.Last().transform.position.x + 0.16f, numbers.Last().transform.position.y), NumberState.end);
+            foreach (GameObject number in numbers)
+            {
+                Destroy(number);
+            }
+            numbers.Clear();
+            HowMuch = 0;
+            Act_Event.GetComponent<Event>().InputFinish = true;
             this.gameObject.SetActive(false); //yeterince girdiyi aldýklarýnda bitiriyor.
         }
-        if (numbers.Any())
+        if(Act_Event.GetComponent<Event>().IsInfinity && Input.GetKeyDown(KeyCode.F))
         {
-            if (!(Act_Event.GetComponent<Event>().InputValueAmount <= HowMuch))
+            foreach (GameObject number in numbers)
+            {
+                Destroy(number);
+            }
+            numbers.Clear();
+            HowMuch = 0;
+            Act_Event.GetComponent<Event>().InputFinish = true;
+            this.gameObject.SetActive(false); //yeterince girdiyi aldýklarýnda bitiriyor.
+        }
+        else if (numbers.Any())
+        {
+            if (!(Act_Event.GetComponent<Event>().InputValueAmount <= HowMuch) || Act_Event.GetComponent<Event>().IsInfinity)
                 foreach (GameObject number in numbers)
                 {
                     Destroy(number);
                 }
             numbers.Clear();
+
         }
         
     }
-
+    
     void ScrollCam()
     {
-        Camera.main.transform.position += new Vector3(Number_Background_radius, 0f, 0f);
+        Camera.main.transform.position = numbers.Last().transform.position+new Vector3(0,0,-42);
     }
-
+    
     public void Erase(int i = 1)
     {
         if (i >= 1)
@@ -171,7 +201,16 @@ public class Set_Mode : MonoBehaviour
                     Destroy(numbers.Last());
                     numbers.RemoveAt(numbers.Count - 1);
                 }
+                for (int y = i; y > 0; y--)
+                {
+                    values = values.Remove(values.Length - 1);
+                }
             }
         }
+    }
+
+    public void ThrowError(string er)
+    {
+        ErrorBox.GetComponent<TextMeshPro>().text = er;
     }
 }

@@ -16,6 +16,8 @@ public class Number : MonoBehaviour
     public GameObject nine;
     public GameObject comma; 
     public GameObject Negative;
+    public GameObject plus;
+    public GameObject e;
     List<GameObject> list;
 
 
@@ -35,6 +37,8 @@ public class Number : MonoBehaviour
         list.Add(nine);
         list.Add(comma);
         list.Add(Negative);
+        list.Add(plus);
+        list.Add(e);
     }
 
     // Update is called once per frame
@@ -50,65 +54,75 @@ public class Number : MonoBehaviour
         {
             i.SetActive(false);
         }
-        if (number == "zero" || number == "sıfır")
+        if (number == "zero" || number == "sıfır" || number == "0")
         {
             zero.SetActive(true);
             return 0;
         }
-        else if (number == "one" || number == "bir")
+        else if (number == "one" || number == "bir" || number == "1")
         {
             one.SetActive(true);
             return 1;
         }
-        else if (number == "two" || number == "iki")
+        else if (number == "two" || number == "iki" || number == "2")
         {
             two.SetActive(true);
             return 2;
         }
-        else if (number == "three" || number == "üç")
+        else if (number == "three" || number == "üç" || number == "3")
         {
             three.SetActive(true);
             return 3;
         }
-        else if (number == "four" || number == "dört")
+        else if (number == "four" || number == "dört" || number == "4")
         {
             four.SetActive(true);
             return 4;
         }
-        else if (number == "five" || number == "beş")
+        else if (number == "five" || number == "beş" || number == "5")
         {
             five.SetActive(true);
             return 5;
         }
-        else if (number == "six" || number == "altı")
+        else if (number == "six" || number == "altı" || number == "6")
         {
             six.SetActive(true);
             return 6;
         }
-        else if (number == "seven" || number == "yedi")
+        else if (number == "seven" || number == "yedi" || number == "7")
         {
             seven.SetActive(true);
             return 7;
         }
-        else if (number == "eight" || number == "sekiz")
+        else if (number == "eight" || number == "sekiz" || number == "8")
         {
             eight.SetActive(true);
             return 8;
         }
-        else if (number == "nine" || number == "dokuz")
+        else if (number == "nine" || number == "dokuz" || number == "9")
         {
             nine.SetActive(true);
             return 9;
         }
-        else if (number == "dot" || number == "comma" || number == "virgul" || number == "nokta")
+        else if (number == "dot" || number == "comma" || number == "virgul" || number == "nokta" || number == "," || number == ".")
         {
             comma.SetActive(true);
-            return 0;
+            return 10;
         }
         else if (number == "negative" || number == "-")
         {
             Negative.SetActive(true);
-            return 0;
+            return 11;
+        }
+        else if(number == "plus" || number == "+")
+        {
+            plus.SetActive(true);
+            return 12;
+        }
+        else if(number == "e" || number == "E")
+        {
+            e.SetActive(true);
+            return 13;
         }
         else
         {

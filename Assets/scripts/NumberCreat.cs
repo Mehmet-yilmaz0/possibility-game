@@ -1,6 +1,11 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 public enum NumberState
 {
     start,
@@ -58,7 +63,7 @@ public class NumberCreat : MonoBehaviour
     {
         GameObject NewObj;
         NewObj = Instantiate(Number);
-        Debug.Log(NewObj.GetComponent<Number>().selectNum(value)); 
+        Debug.Log(NewObj.GetComponent<Number>().selectNum(value));
         NewObj.GetComponent<Number>().selectNum(value);
 
         NewObj.transform.SetLocalPositionAndRotation(position,this.transform.rotation);
@@ -68,10 +73,51 @@ public class NumberCreat : MonoBehaviour
     {
         GameObject NewObj;
         NewObj = Instantiate(Number);
+        
         Debug.Log(NewObj.GetComponent<Number>().selectNum(value));
         NewObj.GetComponent<Number>().selectNum(value);
         NewObj.transform.SetLocalPositionAndRotation(position, this.transform.rotation);
         return NewObj;
-    }
+    }   
+    
+    public List<GameObject> WriteNum(double Value,Vector3 StartPosition,float ObjectWeight=0.16f)
+    {
+        List<GameObject> NewNum = new List<GameObject>();
+        string _value = double.Parse(Value.ToString()).ToString();
+        Debug.Log(_value);
+        NewNum.Add(Create(StartPosition,NumberState.start));
+        StartPosition = AddDistance(StartPosition);
+        foreach(char i in Value.ToString())
+        {
+            Debug.Log(i);
 
+            NewNum.Add(Create(StartPosition, i.ToString()));
+            StartPosition = AddDistance(StartPosition);
+            NewNum.Add(Create(StartPosition, NumberState.left));
+            StartPosition = AddDistance(StartPosition);
+            Debug.Log(i);
+        }
+        NewNum.Add(Create(StartPosition,NumberState.end));
+        return NewNum;
+        
+    }
+    public List<GameObject> WriteNull(Vector3 StartPosition)
+    {
+        List<GameObject> NewNum = new List<GameObject>();
+        NewNum.Add(Create(StartPosition, NumberState.start));
+        StartPosition = AddDistance(StartPosition);
+        NewNum.Add(Create(StartPosition, NumberState.left));
+        StartPosition = AddDistance(StartPosition);
+        NewNum.Add(Create(StartPosition, NumberState.left));
+        StartPosition = AddDistance(StartPosition);
+        NewNum.Add(Create(StartPosition, NumberState.left));
+        StartPosition = AddDistance(StartPosition);
+        NewNum.Add(Create(StartPosition, NumberState.end));
+        return NewNum;
+    }
+    public Vector3 AddDistance(Vector3 position,float ObjectWeight=0.16f)
+    {
+        position = new Vector3(position.x+ObjectWeight,position.y,position.z);
+        return position;
+    }
 }
